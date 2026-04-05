@@ -130,6 +130,8 @@ These tests run automatically with the rest of your test suite.
 
 ## Quick Start
 
+**Requirements:** PHP 8.4+
+
 Clone and install:
 
 ```bash

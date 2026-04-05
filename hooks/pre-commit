@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Pre-commit hook for Laravel AI Guardrails
+# Runs quality checks before allowing commit
+
+set -e
+
+echo "🔍 Running pre-commit quality checks..."
+echo ""
+
+# Check code style
+echo "→ Checking code style (Pint)..."
+if ! composer format:test; then
+    echo "❌ Code style check failed. Run 'composer format' to fix."
+    exit 1
+fi
+echo "✓ Code style passed"
+echo ""
+
+# Run static analysis
+echo "→ Running static analysis (Larastan)..."
+if ! composer analyse; then
+    echo "❌ Static analysis failed."
+    exit 1
+fi
+echo "✓ Static analysis passed"
+echo ""
+
+# Check complexity
+echo "→ Checking code complexity (PHPMD)..."
+if ! composer complexity; then
+    echo "❌ Complexity check failed."
+    exit 1
+fi
+echo "✓ Complexity check passed"
+echo ""
+
+# Run tests
+echo "→ Running tests (Pest)..."
+if ! composer test; then
+    echo "❌ Tests failed."
+    exit 1
+fi
+echo "✓ Tests passed"
+echo ""
+
+echo "✅ All pre-commit checks passed!"
+echo ""

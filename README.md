@@ -1,5 +1,12 @@
 # Guardrailing AI-Assisted Laravel Development
 
+[![CI](https://github.com/axyr/ai-assisted-laravel-development-with-guardrails/actions/workflows/ci.yml/badge.svg)](https://github.com/axyr/ai-assisted-laravel-development-with-guardrails/actions/workflows/ci.yml)
+![PHP Version](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)
+![Laravel Version](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)
+![PHPStan Level](https://img.shields.io/badge/PHPStan-Level%209-brightgreen)
+![Code Style](https://img.shields.io/badge/Code%20Style-Pint-black)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+
 A minimalistic demonstration of quality guardrails for AI-assisted Laravel development.
 
 Clean architecture, code readability and testability are more important than ever in the age of AI coding assistants.

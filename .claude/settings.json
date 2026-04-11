@@ -1,0 +1,85 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "if": "Edit|Write(*.php)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && vendor/bin/pint --dirty --quiet",
+            "description": "Auto-format PHP files with Pint after edits"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "if": "Edit|Write(app/**/*.php)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && vendor/bin/phpstan analyse --error-format=raw --no-progress 2>&1 | head -20",
+            "description": "Run PHPStan on app file changes to catch type errors early"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "if": "Edit|Write(tests/**/*Test.php)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && FILE=$(cat | jq -r '.tool_input.file_path') && vendor/bin/pest \"$FILE\" --bail",
+            "description": "Run specific test file after editing it"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "if": "Bash(rm -rf vendor*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Blocked: Removing vendor directory requires manual confirmation' >&2 && exit 2",
+            "description": "Block accidental vendor directory deletion"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(git push --force*|git push -f*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Blocked: Force push requires manual confirmation' >&2 && exit 2",
+            "description": "Block force pushes to prevent accidental history rewrites"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(git reset --hard*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Blocked: Hard reset requires manual confirmation' >&2 && exit 2",
+            "description": "Block hard resets to prevent accidental work loss"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && echo '## Quality Guardrails Active\\n\\nThis project enforces code quality through:\\n- **Pint**: Code formatting (PER standard + strict types)\\n- **Larastan**: Static analysis at level 9\\n- **PHPMD**: Complexity checks (CC≤5, methods≤30 lines)\\n- **Pest**: Testing with architecture rules\\n\\nRun `composer quality` to execute all checks.\\n\\nCI runs on every push via GitHub Actions.'",
+            "description": "Remind about quality guardrails on session start"
+          }
+        ]
+      }
+    ]
+  }
+}
